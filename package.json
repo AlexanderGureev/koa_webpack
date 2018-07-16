@@ -8,8 +8,8 @@
   "scripts": {
     "watch": "webpack --watch",
     "createPublic": "./createPublic.sh",
-    "start": "webpack --mode=development",
-    "build": "webpack --mode=production",
+    "start": "NODE_ENV=development webpack",
+    "build": "NODE_ENV=production webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -37,5 +37,10 @@
     "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^4.16.0",
     "webpack-cli": "^3.0.8"
+  },
+  "dependencies": {
+    "bootstrap": "^4.1.2",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3"
   }
 }

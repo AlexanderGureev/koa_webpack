@@ -2,6 +2,7 @@ const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 const mode = process.env.NODE_ENV || "development";
 const rootDir = {
@@ -48,8 +49,18 @@ module.exports = {
             template: path.join(rootDir.dev, "chat.html"),
             filename: "chat.html",
             chunks: ["chat"]
+        }),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            _: "lodash"
         })
     ],
+    resolve: {
+        alias: {
+            root: path.resolve(__dirname, "node_modules")
+        },
+        modules: ["node_modules"]
+    },
     module: {
         rules: [
             {
@@ -69,6 +80,14 @@ module.exports = {
                     "css-loader",
                     "postcss-loader",
                     "less-loader"
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader"
                 ]
             },
             {
