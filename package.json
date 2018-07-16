@@ -1,8 +1,10 @@
 {
-  "name": "test_project",
+  "name": "koa_webpack",
   "version": "1.0.0",
-  "description": "",
-  "main": "webpack.config.js",
+  "main": "index.js",
+  "repository": "https://github.com/AlexanderGureev/koa_webpack.git",
+  "author": "Alexandr Gureev <g.alex00@bk.ru>",
+  "license": "MIT",
   "scripts": {
     "watch": "webpack --watch",
     "createPublic": "./createPublic.sh",
@@ -10,9 +12,6 @@
     "build": "webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^8.6.5",
     "babel-core": "^6.26.3",
@@ -27,7 +26,7 @@
     "file-loader": "^1.1.11",
     "fs-extra": "^6.0.1",
     "gulp": "^3.9.1",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^4.0.0-alpha",
     "image-webpack-loader": "^4.3.1",
     "less": "^3.7.1",
     "less-loader": "^4.1.0",

@@ -1,6 +1,65 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/ 		var executeModules = data[2];
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 		// add entry modules from loaded chunk to deferred list
+/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
+/******/
+/******/ 		// run deferred modules when all chunks ready
+/******/ 		return checkDeferredModules();
+/******/ 	};
+/******/ 	function checkDeferredModules() {
+/******/ 		var result;
+/******/ 		for(var i = 0; i < deferredModules.length; i++) {
+/******/ 			var deferredModule = deferredModules[i];
+/******/ 			var fulfilled = true;
+/******/ 			for(var j = 1; j < deferredModule.length; j++) {
+/******/ 				var depId = deferredModule[j];
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 			}
+/******/ 			if(fulfilled) {
+/******/ 				deferredModules.splice(i--, 1);
+/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 			}
+/******/ 		}
+/******/ 		return result;
+/******/ 	}
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"home": 0
+/******/ 	};
+/******/
+/******/ 	var deferredModules = [];
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -79,9 +138,18 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "/";
 /******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./frontend/dev/js/home/index.js");
+/******/
+/******/ 	// add entry module to deferred list
+/******/ 	deferredModules.push([0,"chat~home"]);
+/******/ 	// run deferred modules when ready
+/******/ 	return checkDeferredModules();
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,7 +162,19 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar _validate = __webpack_require__(/*! ./validate/validate.js */ \"./frontend/dev/js/home/validate/validate.js\");\n\nvar _validate2 = _interopRequireDefault(_validate);\n\n__webpack_require__(/*! ../../less/home/main.less */ \"./frontend/dev/less/home/main.less\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nalert((0, _validate2.default)());\n\nfunction sum() {\n    for (var _len = arguments.length, elements = Array(_len), _key = 0; _key < _len; _key++) {\n        elements[_key] = arguments[_key];\n    }\n\n    return elements.reduce(function (prev, curr) {\n        return prev + curr;\n    });\n}\n\nconsole.log(\"SUM = \" + sum(1, 2, 3, 4, 5));//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9mcm9udGVuZC9kZXYvanMvaG9tZS9pbmRleC5qcz8yZmYyIl0sIm5hbWVzIjpbImFsZXJ0Iiwic3VtIiwiZWxlbWVudHMiLCJyZWR1Y2UiLCJwcmV2IiwiY3VyciIsImNvbnNvbGUiLCJsb2ciXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7QUFXQTs7OztBQVJBQSxNQUFNLHlCQUFOOztBQUVBLFNBQVNDLEdBQVQsR0FBMEI7QUFBQSxzQ0FBVkMsUUFBVTtBQUFWQSxnQkFBVTtBQUFBOztBQUN0QixXQUFPQSxTQUFTQyxNQUFULENBQWdCLFVBQUNDLElBQUQsRUFBT0MsSUFBUDtBQUFBLGVBQWdCRCxPQUFPQyxJQUF2QjtBQUFBLEtBQWhCLENBQVA7QUFDSDs7QUFFREMsUUFBUUMsR0FBUixZQUFxQk4sSUFBSSxDQUFKLEVBQU0sQ0FBTixFQUFRLENBQVIsRUFBVSxDQUFWLEVBQVksQ0FBWixDQUFyQiIsImZpbGUiOiIuL2Zyb250ZW5kL2Rldi9qcy9ob21lL2luZGV4LmpzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHZhbGlkYXRvciBmcm9tIFwiLi92YWxpZGF0ZS92YWxpZGF0ZS5qc1wiO1xuXG5cbmFsZXJ0KHZhbGlkYXRvcigpKTtcblxuZnVuY3Rpb24gc3VtKC4uLmVsZW1lbnRzKSB7XG4gICAgcmV0dXJuIGVsZW1lbnRzLnJlZHVjZSgocHJldiwgY3VycikgPT4gcHJldiArIGN1cnIpO1xufVxuXG5jb25zb2xlLmxvZyhgU1VNID0gJHtzdW0oMSwyLDMsNCw1KX1gKTtcblxuaW1wb3J0IFwiLi4vLi4vbGVzcy9ob21lL21haW4ubGVzc1wiOyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./frontend/dev/js/home/index.js\n");
+eval("\n\nvar _validate = __webpack_require__(/*! ./validate/validate.js */ \"./frontend/dev/js/home/validate/validate.js\");\n\nvar _validate2 = _interopRequireDefault(_validate);\n\nvar _sum = __webpack_require__(/*! ./validate/sum */ \"./frontend/dev/js/home/validate/sum.js\");\n\nvar _sum2 = _interopRequireDefault(_sum);\n\n__webpack_require__(/*! ../common/socket.io */ \"./frontend/dev/js/common/socket.io.js\");\n\n__webpack_require__(/*! ../../less/home/main.less */ \"./frontend/dev/less/home/main.less\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n// if (module.hot) {\n//     module.hot.accept('./validate/sum', function () {\n//         console.log('Accepting the updated sum module!');\n//         console.log(`SUM = ${sum(1,2,3,4,5,6)}`);\n//     })\n// }\n\n//alert(validator());\n\n\nconsole.log(\"SUM = \" + (0, _sum2.default)(1, 2, 3, 4, 5, 6, 7));//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9mcm9udGVuZC9kZXYvanMvaG9tZS9pbmRleC5qcz8yZmYyIl0sIm5hbWVzIjpbImNvbnNvbGUiLCJsb2ciXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7QUFDQTs7OztBQUNBOztBQWVBOzs7O0FBYkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBOzs7QUFJQUEsUUFBUUMsR0FBUixZQUFxQixtQkFBSSxDQUFKLEVBQU0sQ0FBTixFQUFRLENBQVIsRUFBVSxDQUFWLEVBQVksQ0FBWixFQUFjLENBQWQsRUFBZ0IsQ0FBaEIsQ0FBckIiLCJmaWxlIjoiLi9mcm9udGVuZC9kZXYvanMvaG9tZS9pbmRleC5qcy5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB2YWxpZGF0b3IgZnJvbSBcIi4vdmFsaWRhdGUvdmFsaWRhdGUuanNcIjtcbmltcG9ydCBzdW0gZnJvbSBcIi4vdmFsaWRhdGUvc3VtXCI7XG5pbXBvcnQgXCIuLi9jb21tb24vc29ja2V0LmlvXCI7XG5cbi8vIGlmIChtb2R1bGUuaG90KSB7XG4vLyAgICAgbW9kdWxlLmhvdC5hY2NlcHQoJy4vdmFsaWRhdGUvc3VtJywgZnVuY3Rpb24gKCkge1xuLy8gICAgICAgICBjb25zb2xlLmxvZygnQWNjZXB0aW5nIHRoZSB1cGRhdGVkIHN1bSBtb2R1bGUhJyk7XG4vLyAgICAgICAgIGNvbnNvbGUubG9nKGBTVU0gPSAke3N1bSgxLDIsMyw0LDUsNil9YCk7XG4vLyAgICAgfSlcbi8vIH1cblxuLy9hbGVydCh2YWxpZGF0b3IoKSk7XG5cblxuXG5jb25zb2xlLmxvZyhgU1VNID0gJHtzdW0oMSwyLDMsNCw1LDYsNyl9YCk7XG5cbmltcG9ydCBcIi4uLy4uL2xlc3MvaG9tZS9tYWluLmxlc3NcIjsiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./frontend/dev/js/home/index.js\n");
+
+/***/ }),
+
+/***/ "./frontend/dev/js/home/validate/sum.js":
+/*!**********************************************!*\
+  !*** ./frontend/dev/js/home/validate/sum.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\nexports.default = sum;\nfunction sum() {\n    for (var _len = arguments.length, elements = Array(_len), _key = 0; _key < _len; _key++) {\n        elements[_key] = arguments[_key];\n    }\n\n    return elements.reduce(function (prev, curr) {\n        return prev + curr;\n    });\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9mcm9udGVuZC9kZXYvanMvaG9tZS92YWxpZGF0ZS9zdW0uanM/YzkxMiJdLCJuYW1lcyI6WyJzdW0iLCJlbGVtZW50cyIsInJlZHVjZSIsInByZXYiLCJjdXJyIl0sIm1hcHBpbmdzIjoiOzs7OztrQkFBd0JBLEc7QUFBVCxTQUFTQSxHQUFULEdBQTBCO0FBQUEsc0NBQVZDLFFBQVU7QUFBVkEsZ0JBQVU7QUFBQTs7QUFDckMsV0FBT0EsU0FBU0MsTUFBVCxDQUFnQixVQUFDQyxJQUFELEVBQU9DLElBQVA7QUFBQSxlQUFnQkQsT0FBT0MsSUFBdkI7QUFBQSxLQUFoQixDQUFQO0FBQ0giLCJmaWxlIjoiLi9mcm9udGVuZC9kZXYvanMvaG9tZS92YWxpZGF0ZS9zdW0uanMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBzdW0oLi4uZWxlbWVudHMpIHtcbiAgICByZXR1cm4gZWxlbWVudHMucmVkdWNlKChwcmV2LCBjdXJyKSA9PiBwcmV2ICsgY3Vycik7XG59Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./frontend/dev/js/home/validate/sum.js\n");
 
 /***/ }),
 
@@ -118,6 +198,18 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("// extracted by mini-css-extract-plugin//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9mcm9udGVuZC9kZXYvbGVzcy9ob21lL21haW4ubGVzcz80YjkyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBIiwiZmlsZSI6Ii4vZnJvbnRlbmQvZGV2L2xlc3MvaG9tZS9tYWluLmxlc3MuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBleHRyYWN0ZWQgYnkgbWluaS1jc3MtZXh0cmFjdC1wbHVnaW4iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./frontend/dev/less/home/main.less\n");
+
+/***/ }),
+
+/***/ 0:
+/*!*********************************************!*\
+  !*** multi ./frontend/dev/js/home/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! /home/alexga/Desktop/koa_webpack/frontend/dev/js/home/index.js */"./frontend/dev/js/home/index.js");
+
 
 /***/ })
 

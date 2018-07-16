@@ -1,9 +1,9 @@
 const Koa = require("koa");
 
-const webpack = require('webpack');
-const config = require('./../webpack.config.js');
+const webpack = require("webpack");
+const config = require("../../webpack.config.js");
 const compiler = webpack(config);
-const koaWebpack = require('koa-webpack');
+const koaWebpack = require("koa-webpack");
 
 const PORT = process.env.PORT || 3000;
 
