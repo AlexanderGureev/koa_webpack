@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/main.js",
+  "bin": {
+    "backend": "main.js"
+  },
+  "scripts": {
+    "start": "node ./bin/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-static": "^5.0.0"
+  },
+  "devDependencies": {
+    "koa-webpack": "^5.1.0"
+  }
+}

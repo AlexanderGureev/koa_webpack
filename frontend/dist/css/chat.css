@@ -1,0 +1,7 @@
+@font-face {
+	font-family: "robo-slap";
+	font-weight: bold;
+	font-style: normal;
+	src: url(./../fonts/RobotoSlab-Bold.woff) format("woff");
+}
+.title{color:red;font-family:robo-slap}
